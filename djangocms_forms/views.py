@@ -35,6 +35,10 @@ class FormSubmission(FormView):
         })
         return form_kwargs
 
+    @staticmethod
+    def is_ajax(request):
+        return request.headers.get('x-requested-with') == 'XMLHttpRequest'
+
     def form_valid(self, form, *args, **kwargs):
         handle_uploaded_files(form)
         form.save(request=self.request)
@@ -43,7 +47,7 @@ class FormSubmission(FormView):
             form=form.form_definition,
             cleaned_data=form.cleaned_data)
 
-        if self.request.is_ajax():
+        if self.is_ajax(self.request):
             response = {
                 'formIsValid': True,
                 'redirectUrl': form.redirect_url,
