@@ -69,8 +69,9 @@ class FormSubmission(FormView):
             # and mail notification was sent
             return redirect('/')
 
+
     def form_invalid(self, form, *args, **kwargs):
-        if self.request.is_ajax():
+        if self.is_ajax(self.request):
             response = {
                 'formIsValid': False,
                 'errors': form.errors,
