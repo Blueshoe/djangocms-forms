@@ -135,6 +135,10 @@ class FormSubmissionAdmin(admin.ModelAdmin):
             request, object_id, form_url=form_url,
             extra_context=context)
 
+    @staticmethod
+    def is_ajax(request):
+        return request.headers.get('x-requested-with') == 'XMLHttpRequest'
+
     def export_view(self, request, form_url=''):
         """The 'export' admin view for this model."""
 
@@ -163,7 +167,7 @@ class FormSubmissionAdmin(admin.ModelAdmin):
                 message = _('No matching %s found for the given criteria. '
                             'Please try again.') % self.opts.verbose_name_plural
                 self.message_user(request, message, level=messages.WARNING)
-                if request.is_ajax():
+                if self.is_ajax(request):
                     data = {
                         'reloadBrowser': True,
                         'submissionCount': 0,
@@ -182,7 +186,7 @@ class FormSubmissionAdmin(admin.ModelAdmin):
                         if label not in headers:
                             headers.append(label)
 
-                if request.is_ajax():
+                if self.is_ajax(request):
                     data = {
                         'reloadBrowser': False,
                         'submissionCount': queryset.count(),
