@@ -1,9 +1,8 @@
 from django import forms, template
 from django.template.defaultfilters import yesno
 from django.utils.safestring import mark_safe
-from django.utils.six import string_types
-from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import force_text
+from django.utils.translation import gettext_lazy as _
+from django.utils.encoding import force_str
 
 from djangocms_forms.fields import HoneyPotField
 
@@ -75,8 +74,8 @@ def friendly(value):
         value = ', '.join(value)
     if type(value) is bool:
         value = yesno(value, u'{0},{1}'.format(_('Yes'), _('No')))
-    if not isinstance(value, string_types):
-        value = force_text(value)
+    if not isinstance(value, str):
+        value = force_str(value)
     return value
 
 
